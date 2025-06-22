@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Heart Light</title>
+  <script src="https://cdn.tailwindcss.com"></script> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script> 
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #000;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="lightCanvas"></canvas>
+
+<script>
+  // --- إعدادات ---
+  const config = {
+    name: "Love", // الاسم الذي سيظهر
+    heartScale: 15, // حجم القلب
+    particleColor: "255, 0, 150", // لون الجسيمات (RGB بدون alpha)
+    fontSize: 60, // حجم خط النص
+    fontFamily: "Arial",
+    particleSpeed: 2, // سرعة الجسيمات
+    steps: 1000 // عدد نقاط القلب
+  };
+
+  const canvas = document.getElementById('lightCanvas');
+  const ctx = canvas.getContext('2d');
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+
+  let heartPoints = [];
+  let textPoints = [];
+
+  // --- نجوم الخلفية ---
+  let stars = [];
+
+  function createStars(count = 30) {
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * width, 
+        y: Math.random() * height,
+        radius: Math.random() * 1.5 + 0.5, 
+        alpha: Math.random(), 
+        delta: Math.random() * 0.005 + 0.0005 
+      });
+    }
+  }
+
+  function drawStars() {
+    for (let star of stars) {
+      star.alpha += star.delta; 
+      if (star.alpha <= 0 || star.alpha >= 1) {
+        star.delta = -star.delta;
+      }
+
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+      ctx.shadowBlur = 10; 
+      ctx.shadowColor = "#fff";
+      ctx.fill();
+    }
+  }
+
+  // --- معادلة القلب ---
+  function heart(t) {
+    return {
+      x: 16 * Math.pow(Math.sin(t), 3),
+      y: -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))
+    };
+  }
+
+  function generateHeartPoints() {
+    heartPoints = [];
+    for (let i = 0; i < config.steps; i++) {
+      const t = i * Math.PI * 2 / config.steps;
+      const pt = heart(t);
+      heartPoints.push({
+        x: width / 2 + pt.x * config.heartScale,
+        y: height / 2 + pt.y * config.heartScale
+      });
+    }
+  }
+
+  function generateTextPoints() {
+    textPoints = [];
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+
+    tempCtx.font = `bold ${config.fontSize}px ${config.fontFamily}`;
+    tempCtx.textAlign = 'center';
+    tempCtx.textBaseline = 'middle';
+    tempCtx.fillText(config.name, width / 2, height / 2);
+
+    const imageData = tempCtx.getImageData(0, 0, width, height);
+    const pixels = imageData.data;
+
+    for (let y = 0; y < height; y += 4) {
+      for (let x = 0; x < width; x += 4) {
+        const index = (y * width + x) * 4;
+        if (pixels[index + 3] > 128) {
+          textPoints.push({ x, y });
+        }
+      }
+    }
+  }
+
+  class Particle {
+    constructor(x, y, targetX, targetY) {
+      this.x = x;
+      this.y = y;
+      this.targetX = targetX;
+      this.targetY = targetY;
+      this.speed = Math.random() * config.particleSpeed + 1;
+      this.size = Math.random() * 2 + 1;
+      this.alpha = 0;
+      this.reached = false;
+    }
+
+    update() {
+      const dx = this.targetX - this.x;
+      const dy = this.targetY - this.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist > this.speed && !this.reached) {
+        this.x += dx / dist * this.speed;
+        this.y += dy / dist * this.speed;
+        this.alpha += 0.02;
+      } else {
+        this.reached = true;
+        this.alpha = 1;
+      }
+    }
+
+    draw(ctx) {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${config.particleColor}, ${this.alpha})`;
+      ctx.fill();
+    }
+  }
+
+  let particles = [];
+
+  function createParticles() {
+    particles = [];
+
+    heartPoints.forEach(pt => {
+      const side = Math.floor(Math.random() * 4);
+      let edgeX, edgeY;
+      switch (side) {
+        case 0: edgeX = 0; edgeY = Math.random() * height; break;
+        case 1: edgeX = width; edgeY = Math.random() * height; break;
+        case 2: edgeX = Math.random() * width; edgeY = 0; break;
+        case 3: edgeX = Math.random() * width; edgeY = height; break;
+      }
+      particles.push(new Particle(edgeX, edgeY, pt.x, pt.y));
+    });
+
+    textPoints.forEach(pt => {
+      const side = Math.floor(Math.random() * 4);
+      let edgeX, edgeY;
+      switch (side) {
+        case 0: edgeX = 0; edgeY = Math.random() * height; break;
+        case 1: edgeX = width; edgeY = Math.random() * height; break;
+        case 2: edgeX = Math.random() * width; edgeY = 0; break;
+        case 3: edgeX = Math.random() * width; edgeY = height; break;
+      }
+      particles.push(new Particle(edgeX, edgeY, pt.x, pt.y));
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.save();
+
+    // رسم النجوم
+    drawStars();
+
+    // رسم الجسيمات
+    ctx.restore();
+    ctx.globalCompositeOperation = 'lighter';
+
+    particles.forEach(p => {
+      p.update();
+      p.draw(ctx);
+    });
+
+    ctx.globalCompositeOperation = 'source-over';
+
+    requestAnimationFrame(animate);
+  }
+
+  function resizeCanvas() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+
+    stars = []; 
+    createStars();
+
+    config.fontSize = Math.max(30, Math.min(window.innerWidth, window.innerHeight) * 0.2);
+    config.heartScale = Math.max(10, Math.min(window.innerWidth, window.innerHeight) / 40);
+
+    generateHeartPoints();
+    generateTextPoints();
+    createParticles();
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+
+  // --- تنفيذ البرنامج ---
+  resizeCanvas();
+  createStars();
+  generateHeartPoints();
+  generateTextPoints();
+  createParticles();
+  animate();
+</script>
+</body>
+</html>

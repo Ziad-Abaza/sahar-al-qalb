@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>you are the magic of my night ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Caveat', cursive, sans-serif;
+      background: linear-gradient(to bottom, #0d0d2b, #1a1a4f);  
+      color: white;
+    }
+
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .overlay {
+      height: 100vh;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      top: 30%;
+      animation: fadeIn 4s ease-out forwards;
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(40px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    h1 {
+      font-size: 3em;
+      color: #ffccff;
+      text-shadow: 0 0 20px #ff66cc, 0 0 30px #ff99cc;
+      margin-bottom: 15px;
+      font-family: 'Playfair Display', serif;
+    }
+
+    p {
+      font-size: 1.5em;
+      color: #dddddd;
+      max-width: 700px;
+      margin: auto;
+      line-height: 1.8em;
+      animation: slideUp 3s ease-in-out;
+    }
+
+    @keyframes slideUp {
+      from {transform: translateY(20px); opacity: 0;}
+      to {transform: translateY(0); opacity: 1;}
+    }
+
+    .heart-button {
+      margin-top: 40px;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      background: linear-gradient(to right, #ff6ec4, #ff6ec4);
+      border: none;
+      color: white;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 20px #ff6ec4;
+      transition: all 0.3s ease;
+    }
+
+    .heart-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px #ff99cc;
+    }
+
+    .floating-heart {
+      position: absolute;
+      font-size: 2em;
+      animation: flyHeart 6s ease-in infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes flyHeart {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    .light-effect {
+      position: fixed;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,100,180,0.3), transparent 70%);
+      width: 300px;
+      height: 300px;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      animation: pulse 5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.4; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    }
+
+    .moon-light {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      font-size: 2em;
+      color: #ffffffaa;
+      text-shadow: 0 0 10px #ffffff55;
+      z-index: 1;
+      animation: glowMoon 3s infinite alternate;
+    }
+
+    @keyframes glowMoon {
+      from { text-shadow: 0 0 10px #ffffff55; }
+      to { text-shadow: 0 0 20px #ffffffaa; }
+    }
+
+    #loveMessage {
+      display: none;
+      font-size: 1.8em;
+      margin-top: 30px;
+      color: #ffddff;
+      animation: fadeIn 3s ease-in;
+    }
+
+    #loveMessages {
+      margin-top: 30px;
+      font-size: 1.6em;
+      color: #ffddff;
+      min-height: 2em;
+      transition: opacity 0.8s ease-in-out;
+      opacity: 0;
+    }
+
+    #cursor-dot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      background: #ffffff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      transition: transform 0.1s ease;
+    }
+
+    #cursor-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, rgba(255,100,180,0.3), transparent 70%);
+      pointer-events: none;
+      z-index: 9998;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.6;
+      transition: opacity 0.3s ease;
+    }
+
+    #sparklesCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9997;
+    }
+
+    .sparkle {
+      position: fixed;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      pointer-events: none;
+      animation: sparkleAnim var(--duration) ease-out forwards;
+    }
+
+    @keyframes sparkleAnim {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <audio id="backgroundMusic" src="romantic-piano-song-350-309083.mp3" loop></audio>
+<div id="particles-js"></div>
+<div id="cursor-dot"></div>
+<div id="cursor-glow"></div>
+<canvas id="sparklesCanvas"></canvas>
+<div class="moon-light">🌕</div>
+
+<div class="overlay">
+  <div>
+    <h1>أنتِ سحر ليلتي ❤️</h1>
+    <p>كل نجمة في هذا الكون تحكي قصة حبي لك...</p>
+    <button class="heart-button" onclick="launchHearts(this)">💖 انتي قلبي</button>
+  </div>
+  <div id="loveMessage"></div>
+  <div id="loveMessages"></div>
+</div>
+
+<script>
+particlesJS("particles-js", {
+  "particles": {
+    "number": {
+      "value": 150,
+      "density": {
+        "enable": true,
+        "value_area": 800
+      }
+    },
+    "color": {
+      "value": "#ffffff"
+    },
+    "shape": {
+      "type": "circle"
+    },
+    "opacity": {
+      "value": 0.7,
+      "random": true
+    },
+    "size": {
+      "value": 3,
+      "random": true
+    },
+    "line_linked": {
+      "enable": false
+    },
+    "move": {
+      "enable": true,
+      "speed": 0.5
+    }
+  },
+  "interactivity": {
+    "detect_on": "canvas",
+    "events": {
+      "onhover": {
+        "enable": true,
+        "mode": "repulse"
+      },
+      "onclick": {
+        "enable": true,
+        "mode": "push"
+      }
+    }
+  },
+  "retina_detect": true
+});
+
+const cursorDot = document.getElementById('cursor-dot');
+const cursorGlow = document.getElementById('cursor-glow');
+const canvas = document.getElementById('sparklesCanvas');
+const music = document.getElementById("backgroundMusic");
+const ctx = canvas.getContext('2d');
+
+
+let width = window.innerWidth;
+let height = window.innerHeight;
+canvas.width = width;
+canvas.height = height;
+
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+
+window.addEventListener('resize', () => {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+});
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+
+  cursorDot.style.left = mouseX + 'px';
+  cursorDot.style.top = mouseY + 'px';
+
+  cursorGlow.style.left = mouseX + 'px';
+  cursorGlow.style.top = mouseY + 'px';
+
+  createSparkle(mouseX, mouseY);
+  music.volume = 0.5; // تحديد مستوى الصوت
+  music.play().catch(err => {
+    console.log("فشل في تشغيل الموسيقى تلقائيًا:", err);
+});
+});
+
+function createSparkle(x, y) {
+  const sparkleCount = 3;
+  for (let i = 0; i < sparkleCount; i++) {
+    const angle = Math.random() * 2 * Math.PI;
+    const radius = Math.random() * 15;
+    const sx = x + Math.cos(angle) * radius;
+    const sy = y + Math.sin(angle) * radius;
+    const size = Math.random() * 2 + 1;
+    const duration = Math.random() * 500 + 500;
+
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle';
+    sparkle.style.left = sx + 'px';
+    sparkle.style.top = sy + 'px';
+    sparkle.style.width = sparkle.style.height = size + 'px';
+    sparkle.style.setProperty('--duration', duration + 'ms');
+    document.body.appendChild(sparkle);
+
+    setTimeout(() => sparkle.remove(), duration);
+  }
+}
+
+const messages = [
+  "❤️ عيناكِ إن نظرتُ فيهما، أضاعت العمرَ في ثوانِ",
+  "💖 يا قمراً يسكنُ في صدري، ويضيء القلب بالأماني",
+  "🌙 الليل دونكِ موحشٌ، وسُهاد قلبي لا ينامُ",
+  "💞 حديثكِ لحنٌ ناعمٌ، يسري بروحي كالغمامُ",
+  "🌹 إني أحبكِ لا سؤال، كأنكِ الوحي والكمالُ",
+  "✨ أنفاسكِ الشعر الجميل، وقلبكِ الدفء والسلامُ",
+  "🌺 يا كلّ أوقاتي الحلوة، يا قصتي منذ البداية",
+  "🔥 أحبكِ حبًا لو دراهُ، البحرُ ثار وما ارتضى المينا",
+  "💘 بعيونكِ الوطنُ ارتسم، وفي همسكِ أمانينا",
+  "🕊️ كلّما نطقتِ باسمي، شعرتُ بأنّني حيٌّ من جديد"
+];
+
+
+let currentMessageIndex = 0;
+const messageElement = document.getElementById("loveMessages");
+
+function showNextMessage() {
+  messageElement.style.opacity = 0;
+  setTimeout(() => {
+    messageElement.textContent = messages[currentMessageIndex];
+    currentMessageIndex = (currentMessageIndex + 1) % messages.length;
+    messageElement.style.opacity = 1;
+  }, 400);
+}
+
+function launchHearts(btn) {
+  const heartCount = 20;
+  for (let i = 0; i < heartCount; i++) {
+    setTimeout(() => {
+      const heart = document.createElement('div');
+      heart.classList.add('floating-heart');
+      heart.innerHTML = '💖';
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.top = '90%';
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 6000);
+    }, i * 150); 
+  }
+
+  btn.style.transform = 'scale(1.2)';
+  btn.style.boxShadow = '0 0 30px #ff99cc';
+  setTimeout(() => {
+    btn.style.transform = 'scale(1)';
+    btn.style.boxShadow = '0 0 20px #ff6ec4';
+  }, 300);
+
+  document.getElementById("loveMessage").style.display = "block";
+}
+
+setTimeout(() => {
+  messageElement.style.opacity = 1;
+  showNextMessage();
+}, 5000);
+
+setInterval(showNextMessage, 7000);
+
+</script>
+</body>
+</html>
